@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
         chrome.tabs.query({}, function (tabs) {
             tabs
                 .filter(tab => tab.title.toLowerCase().includes(query) || tab.url.toLowerCase().includes(query))
-                .sort((a, b) => compareResults(a, b))
+                .sort(compareResults)
                 .forEach(tab => {
                     updateResult(tab.title, tab.url, 'tab');
                 });
@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
         chrome.bookmarks.search(query, function (bookmarks) {
             bookmarks
                 .filter(bookmark => bookmark.title.toLowerCase().includes(query) || (bookmark.url && bookmark.url.toLowerCase().includes(query)))
-                .sort((a, b) => compareResults(a, b))
+                .sort(compareResults)
                 .forEach(bookmark => {
                     updateResult(bookmark.title, bookmark.url, 'bookmark');
                 });
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function () {
         chrome.history.search({ text: query, maxResults: 100 }, function (historyItems) {
             historyItems
                 .filter(item => item.title.toLowerCase().includes(query) || item.url.toLowerCase().includes(query))
-                .sort((a, b) => compareResults(a, b))
+                .sort(compareResults)
                 .forEach(item => {
                     updateResult(item.title, item.url, 'history');
                 });
