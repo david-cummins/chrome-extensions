@@ -1,11 +1,11 @@
 document.addEventListener('DOMContentLoaded', function () {
     const searchInput = document.getElementById('search');
-    const resultsDiv = document.getElementById('results');
+    const resultsTable = document.querySelector('.table');
     const urlMap = {};
 
     searchInput.addEventListener('input', function () {
         const query = searchInput.value.toLowerCase();
-        resultsDiv.innerHTML = '';
+        clearResults();
         Object.keys(urlMap).forEach(key => delete urlMap[key]);
 
         if (query) {
@@ -14,6 +14,11 @@ document.addEventListener('DOMContentLoaded', function () {
             searchHistory(query);
         }
     });
+
+    function clearResults() {
+        const rows = resultsTable.querySelectorAll('.table-row:not(.table-header)');
+        rows.forEach(row => row.remove());
+    }
 
     function searchTabs(query) {
         chrome.tabs.query({}, function (tabs) {
@@ -60,60 +65,60 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function addResult(title, url, sources) {
-        const resultDiv = document.createElement('div');
-        resultDiv.className = 'result';
+        const resultRow = document.createElement('div');
+        resultRow.className = 'table-row result';
 
-        const domainDiv = document.createElement('div');
-        domainDiv.className = 'domain';
-        domainDiv.textContent = (new URL(url)).hostname;
+        const domainCell = document.createElement('div');
+        domainCell.className = 'table-cell domain';
+        domainCell.textContent = (new URL(url)).hostname;
 
-        const titleDiv = document.createElement('div');
-        titleDiv.className = 'title';
-        titleDiv.textContent = title;
-        titleDiv.title = url; // Show full URL on mouseover
+        const titleCell = document.createElement('div');
+        titleCell.className = 'table-cell title';
+        titleCell.textContent = title;
+        titleCell.title = url; // Show full URL on mouseover
 
         const link = document.createElement('a');
         link.href = url;
         link.target = '_blank';
-        link.appendChild(titleDiv);
+        link.appendChild(titleCell);
 
-        const iconsDiv = document.createElement('div');
-        iconsDiv.className = 'icons';
-        updateIconsContent(iconsDiv, sources);
+        const iconsCell = document.createElement('div');
+        iconsCell.className = 'table-cell icons';
+        updateIconsContent(iconsCell, sources);
 
-        resultDiv.appendChild(domainDiv);
-        resultDiv.appendChild(link);
-        resultDiv.appendChild(iconsDiv);
-        resultsDiv.appendChild(resultDiv);
+        resultRow.appendChild(domainCell);
+        resultRow.appendChild(link);
+        resultRow.appendChild(iconsCell);
+        resultsTable.appendChild(resultRow);
     }
 
     function updateIcons(url, sources) {
-        const results = Array.from(resultsDiv.getElementsByClassName('result'));
+        const results = Array.from(resultsTable.getElementsByClassName('result'));
         results.forEach(result => {
             const link = result.querySelector('a');
             if (link.href === url) {
-                const iconsDiv = result.querySelector('.icons');
-                updateIconsContent(iconsDiv, sources);
+                const iconsCell = result.querySelector('.icons');
+                updateIconsContent(iconsCell, sources);
             }
         });
     }
 
-    function updateIconsContent(iconsDiv, sources) {
-        iconsDiv.innerHTML = '';
+    function updateIconsContent(iconsCell, sources) {
+        iconsCell.innerHTML = '';
         if (sources.has('tab')) {
             const tabIcon = document.createElement('i');
             tabIcon.className = 'fas fa-window-maximize'; // FontAwesome icon for tabs
-            iconsDiv.appendChild(tabIcon);
+            iconsCell.appendChild(tabIcon);
         }
         if (sources.has('bookmark')) {
             const bookmarkIcon = document.createElement('i');
             bookmarkIcon.className = 'fas fa-bookmark'; // FontAwesome icon for bookmarks
-            iconsDiv.appendChild(bookmarkIcon);
+            iconsCell.appendChild(bookmarkIcon);
         }
         if (sources.has('history')) {
             const historyIcon = document.createElement('i');
             historyIcon.className = 'fas fa-history'; // FontAwesome icon for history
-            iconsDiv.appendChild(historyIcon);
+            iconsCell.appendChild(historyIcon);
         }
     }
 

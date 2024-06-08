@@ -22,45 +22,59 @@
             margin-top: 10px;
         }
 
-        .result {
-            display: flex;
-            align-items: center;
+        .table {
+            display: table;
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table-header, .table-row {
+            display: table-row;
+        }
+
+        .table-cell {
+            display: table-cell;
             padding: 5px;
+            text-align: left;
             border-bottom: 1px solid #ddd;
+            vertical-align: middle;
         }
 
-            .result .domain {
-                width: 150px; /* Domain column width */
-                min-width: 100px;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-            }
-
-            .result .title {
-                flex-grow: 1;
-                text-align: left;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-                cursor: pointer;
-            }
-
-            .result .icons {
-                width: 75px; /* Fixed width for icons column */
-                display: flex;
-                justify-content: flex-end;
-                gap: 5px; /* 5px between icons */
-            }
-
-        .icons i {
-            font-size: 16px;
+        .domain {
+            width: 150px;
+            min-width: 100px;
         }
+
+        .title {
+            width: calc(100% - 225px); /* Adjusted for other column widths */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        .icons {
+            width: 75px; /* Fixed width for icons column */
+            text-align: right;
+        }
+
+            .icons i {
+                margin-left: 5px; /* 5px between icons */
+                font-size: 16px;
+            }
     </style>
 </head>
 <body>
     <input type="text" id="search" placeholder="Search tabs, bookmarks, and history">
-    <div class="results" id="results"></div>
+    <div class="results" id="results">
+        <div class="table">
+            <div class="table-header">
+                <div class="table-cell domain">Domain</div>
+                <div class="table-cell title">Title</div>
+                <div class="table-cell icons">Icons</div>
+            </div>
+        </div>
+    </div>
 
     <script src="popup.js"></script>
 </body>
