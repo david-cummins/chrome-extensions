@@ -5,21 +5,25 @@
         body {
             width: 300px;
             font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 10px;
         }
 
         input[type="text"] {
             width: 100%;
             padding: 8px;
-            margin: 8px 0;
             box-sizing: border-box;
         }
 
         .results {
             max-height: 400px;
             overflow-y: auto;
+            margin-top: 10px;
         }
 
         .result {
+            display: flex;
+            align-items: center;
             padding: 5px;
             border-bottom: 1px solid #ddd;
         }
@@ -27,11 +31,23 @@
             .result a {
                 text-decoration: none;
                 color: #000;
+                flex-grow: 1;
+            }
+
+        .icons {
+            width: 60px;
+            display: flex;
+            justify-content: space-around;
+        }
+
+            .icons img {
+                width: 16px;
+                height: 16px;
             }
     </style>
 </head>
 <body>
-    <input type="text" id="search" placeholder="Search tabs and bookmarks">
+    <input type="text" id="search" placeholder="Search tabs, bookmarks, and history">
     <div class="results" id="results"></div>
 
     <script src="popup.js"></script>
