@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
-            width: 300px;
+            width: 600px; /* Make results twice as wide */
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 10px;
@@ -29,21 +29,31 @@
             border-bottom: 1px solid #ddd;
         }
 
-            .result a {
-                text-decoration: none;
-                color: #000;
+            .result .domain {
+                width: 150px; /* Domain column width */
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .result .title {
                 flex-grow: 1;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                cursor: pointer;
             }
 
-        .icons {
-            width: 60px;
-            display: flex;
-            justify-content: space-around;
+            .result .icons {
+                width: 75px; /* Fixed width for icons column */
+                display: flex;
+                justify-content: flex-end;
+                gap: 5px; /* 5px between icons */
+            }
+
+        .icons i {
+            font-size: 16px;
         }
-
-            .icons i {
-                font-size: 16px;
-            }
     </style>
 </head>
 <body>

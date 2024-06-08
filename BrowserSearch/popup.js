@@ -17,31 +17,34 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function searchTabs(query) {
         chrome.tabs.query({}, function (tabs) {
-            tabs.forEach(tab => {
-                if (tab.title.toLowerCase().includes(query) || tab.url.toLowerCase().includes(query)) {
+            tabs
+                .filter(tab => tab.title.toLowerCase().includes(query) || tab.url.toLowerCase().includes(query))
+                .sort((a, b) => compareResults(a, b))
+                .forEach(tab => {
                     updateResult(tab.title, tab.url, 'tab');
-                }
-            });
+                });
         });
     }
 
     function searchBookmarks(query) {
         chrome.bookmarks.search(query, function (bookmarks) {
-            bookmarks.forEach(bookmark => {
-                if (bookmark.title.toLowerCase().includes(query) || (bookmark.url && bookmark.url.toLowerCase().includes(query))) {
+            bookmarks
+                .filter(bookmark => bookmark.title.toLowerCase().includes(query) || (bookmark.url && bookmark.url.toLowerCase().includes(query)))
+                .sort((a, b) => compareResults(a, b))
+                .forEach(bookmark => {
                     updateResult(bookmark.title, bookmark.url, 'bookmark');
-                }
-            });
+                });
         });
     }
 
     function searchHistory(query) {
         chrome.history.search({ text: query, maxResults: 100 }, function (historyItems) {
-            historyItems.forEach(item => {
-                if (item.title.toLowerCase().includes(query) || item.url.toLowerCase().includes(query)) {
+            historyItems
+                .filter(item => item.title.toLowerCase().includes(query) || item.url.toLowerCase().includes(query))
+                .sort((a, b) => compareResults(a, b))
+                .forEach(item => {
                     updateResult(item.title, item.url, 'history');
-                }
-            });
+                });
         });
     }
 
@@ -59,15 +62,26 @@ document.addEventListener('DOMContentLoaded', function () {
     function addResult(title, url, sources) {
         const resultDiv = document.createElement('div');
         resultDiv.className = 'result';
+
+        const domainDiv = document.createElement('div');
+        domainDiv.className = 'domain';
+        domainDiv.textContent = (new URL(url)).hostname;
+
+        const titleDiv = document.createElement('div');
+        titleDiv.className = 'title';
+        titleDiv.textContent = title;
+        titleDiv.title = url; // Show full URL on mouseover
+
         const link = document.createElement('a');
         link.href = url;
-        link.textContent = title;
         link.target = '_blank';
+        link.appendChild(titleDiv);
 
         const iconsDiv = document.createElement('div');
         iconsDiv.className = 'icons';
         updateIconsContent(iconsDiv, sources);
 
+        resultDiv.appendChild(domainDiv);
         resultDiv.appendChild(link);
         resultDiv.appendChild(iconsDiv);
         resultsDiv.appendChild(resultDiv);
@@ -101,5 +115,17 @@ document.addEventListener('DOMContentLoaded', function () {
             historyIcon.className = 'fas fa-history'; // FontAwesome icon for history
             iconsDiv.appendChild(historyIcon);
         }
+    }
+
+    function compareResults(a, b) {
+        const domainA = (new URL(a.url)).hostname.toLowerCase();
+        const domainB = (new URL(b.url)).hostname.toLowerCase();
+        if (domainA < domainB) return -1;
+        if (domainA > domainB) return 1;
+        const titleA = a.title.toLowerCase();
+        const titleB = b.title.toLowerCase();
+        if (titleA < titleB) return -1;
+        if (titleA > titleB) return 1;
+        return 0;
     }
 });
