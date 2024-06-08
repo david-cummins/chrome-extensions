@@ -87,21 +87,18 @@ document.addEventListener('DOMContentLoaded', function () {
     function updateIconsContent(iconsDiv, sources) {
         iconsDiv.innerHTML = '';
         if (sources.has('tab')) {
-            const tabIcon = document.createElement('img');
-            tabIcon.src = 'tab-icon.png'; // Use your icon path
-            tabIcon.alt = 'Tab';
+            const tabIcon = document.createElement('i');
+            tabIcon.className = 'fas fa-window-maximize'; // FontAwesome icon for tabs
             iconsDiv.appendChild(tabIcon);
         }
         if (sources.has('bookmark')) {
-            const bookmarkIcon = document.createElement('img');
-            bookmarkIcon.src = 'bookmark-icon.png'; // Use your icon path
-            bookmarkIcon.alt = 'Bookmark';
+            const bookmarkIcon = document.createElement('i');
+            bookmarkIcon.className = 'fas fa-bookmark'; // FontAwesome icon for bookmarks
             iconsDiv.appendChild(bookmarkIcon);
         }
         if (sources.has('history')) {
-            const historyIcon = document.createElement('img');
-            historyIcon.src = 'history-icon.png'; // Use your icon path
-            historyIcon.alt = 'History';
+            const historyIcon = document.createElement('i');
+            historyIcon.className = 'fas fa-history'; // FontAwesome icon for history
             iconsDiv.appendChild(historyIcon);
         }
     }
