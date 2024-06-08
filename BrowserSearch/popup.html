@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            width: 300px;
+            font-family: Arial, sans-serif;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin: 8px 0;
+            box-sizing: border-box;
+        }
+
+        .results {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .result {
+            padding: 5px;
+            border-bottom: 1px solid #ddd;
+        }
+
+            .result a {
+                text-decoration: none;
+                color: #000;
+            }
+    </style>
+</head>
+<body>
+    <input type="text" id="search" placeholder="Search tabs and bookmarks">
+    <div class="results" id="results"></div>
+
+    <script src="popup.js"></script>
+</body>
+</html>
