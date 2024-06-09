@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     function clearResults() {
-        const rows = resultsTable.querySelectorAll('.table-row:not(.table-header)');
+        const rows = resultsTable.querySelectorAll('.table-row');
         rows.forEach(row => row.remove());
     }
 
@@ -84,10 +84,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const domainCell = document.createElement('div');
         domainCell.className = 'table-cell domain';
-
-        const domainText = document.createElement('span');
-        domainText.textContent = (new URL(url)).hostname;
-        domainCell.appendChild(domainText);
+        domainCell.textContent = (new URL(url)).hostname;
 
         const titleCell = document.createElement('div');
         titleCell.className = 'table-cell title';

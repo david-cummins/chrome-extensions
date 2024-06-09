@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
-            width: 600px; /* Make results twice as wide */
+            width: 800px; /* Make the popup 800px wide */
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 10px;
@@ -17,7 +17,7 @@
         }
 
         .results {
-            max-height: 400px;
+            max-height: 600px;
             overflow-y: auto;
             margin-top: 10px;
         }
@@ -28,7 +28,7 @@
             border-collapse: collapse;
         }
 
-        .table-header, .table-row {
+        .table-row {
             display: table-row;
         }
 
@@ -54,7 +54,7 @@
         }
 
         .icons {
-            width: 75px; /* Fixed width for icons column */
+            width: 125px; /* Fixed width for icons column */
             text-align: right;
         }
 
@@ -67,13 +67,7 @@
 <body>
     <input type="text" id="search" placeholder="Search tabs, bookmarks, and history">
     <div class="results" id="results">
-        <div class="table">
-            <!--<div class="table-header">
-                <div class="table-cell domain">Domain</div>
-                <div class="table-cell title">Title</div>
-                <div class="table-cell icons">Icons</div>
-            </div>-->
-        </div>
+        <div class="table"></div>
     </div>
 
     <script src="popup.js"></script>
