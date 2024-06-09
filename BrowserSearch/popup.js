@@ -2,11 +2,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const searchInput = document.getElementById('search');
     const resultsTable = document.querySelector('.table');
     const urlMap = {};
+    const historyMap = {};
 
     searchInput.addEventListener('input', function () {
         const query = searchInput.value.toLowerCase();
         clearResults();
         Object.keys(urlMap).forEach(key => delete urlMap[key]);
+        Object.keys(historyMap).forEach(key => delete historyMap[key]);
 
         if (query) {
             searchTabs(query);
@@ -46,11 +48,23 @@ document.addEventListener('DOMContentLoaded', function () {
         chrome.history.search({ text: query, maxResults: 100 }, function (historyItems) {
             historyItems
                 .filter(item => item.title.toLowerCase().includes(query) || item.url.toLowerCase().includes(query))
-                .sort(compareResults)
                 .forEach(item => {
-                    updateResult(item.title, item.url, 'history');
+                    const score = calculateScore(item.visitCount, item.lastVisitTime);
+                    const key = `${(new URL(item.url)).hostname}|${item.title.toLowerCase()}`;
+                    if (!historyMap[key] || historyMap[key].score < score) {
+                        historyMap[key] = { ...item, score: score };
+                    }
                 });
+
+            Object.values(historyMap).sort(compareResults).forEach(item => {
+                updateResult(item.title, item.url, 'history');
+            });
         });
+    }
+
+    function calculateScore(visitCount, lastVisitTime) {
+        const daysSinceLastVisit = (Date.now() - lastVisitTime) / (1000 * 60 * 60 * 24);
+        return visitCount - daysSinceLastVisit;
     }
 
     function updateResult(title, url, source) {
@@ -70,7 +84,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const domainCell = document.createElement('div');
         domainCell.className = 'table-cell domain';
-        domainCell.textContent = (new URL(url)).hostname;
+
+        const domainText = document.createElement('span');
+        domainText.textContent = (new URL(url)).hostname;
+        domainCell.appendChild(domainText);
 
         const titleCell = document.createElement('div');
         titleCell.className = 'table-cell title';
