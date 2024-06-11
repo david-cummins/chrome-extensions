@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     const searchInput = document.getElementById('search');
-    const resultsTable = document.querySelector('.table');
+    const resultsTable = document.getElementById('resultsTable');
     const urlMap = {};
     const historyMap = {};
 
@@ -18,8 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     function clearResults() {
-        const rows = resultsTable.querySelectorAll('.table-row');
-        rows.forEach(row => row.remove());
+        resultsTable.innerHTML = '';
     }
 
     function searchTabs(query) {
@@ -79,15 +78,15 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function addResult(title, url, sources) {
-        const resultRow = document.createElement('div');
-        resultRow.className = 'table-row result';
+        const resultRow = document.createElement('tr');
+        resultRow.className = 'result';
 
-        const domainCell = document.createElement('div');
-        domainCell.className = 'table-cell domain';
+        const domainCell = document.createElement('td');
+        domainCell.className = 'domain';
         domainCell.textContent = (new URL(url)).hostname;
 
-        const titleCell = document.createElement('div');
-        titleCell.className = 'table-cell title';
+        const titleCell = document.createElement('td');
+        titleCell.className = 'title';
         titleCell.textContent = title;
         titleCell.title = url; // Show full URL on mouseover
 
@@ -96,8 +95,8 @@ document.addEventListener('DOMContentLoaded', function () {
         link.target = '_blank';
         link.appendChild(titleCell);
 
-        const iconsCell = document.createElement('div');
-        iconsCell.className = 'table-cell icons';
+        const iconsCell = document.createElement('td');
+        iconsCell.className = 'icons';
         updateIconsContent(iconsCell, sources);
 
         resultRow.appendChild(domainCell);

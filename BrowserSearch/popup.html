@@ -22,21 +22,18 @@
             margin-top: 10px;
         }
 
-        .table {
-            display: table;
+        table {
             width: 100%;
             border-collapse: collapse;
         }
 
-        .table-row {
-            display: table-row;
+        tr {
+            border-bottom: 1px solid #ddd;
         }
 
-        .table-cell {
-            display: table-cell;
+        td {
             padding: 5px;
             text-align: left;
-            border-bottom: 1px solid #ddd;
             vertical-align: middle;
         }
 
@@ -54,8 +51,9 @@
         }
 
         .icons {
-            width: 125px; /* Fixed width for icons column */
+            width: 75px; /* Fixed width for icons column */
             text-align: right;
+            white-space: nowrap; /* Prevent wrapping */
         }
 
             .icons i {
@@ -67,7 +65,7 @@
 <body>
     <input type="text" id="search" placeholder="Search tabs, bookmarks, and history">
     <div class="results" id="results">
-        <div class="table"></div>
+        <table id="resultsTable"></table>
     </div>
 
     <script src="popup.js"></script>
