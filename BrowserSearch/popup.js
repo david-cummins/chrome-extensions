@@ -8,6 +8,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let debounceTimeout;
 
+    // Autofocus on the search box when the popup opens
+    searchInput.focus();
+
     searchInput.addEventListener('input', function () {
         clearTimeout(debounceTimeout);
         debounceTimeout = setTimeout(() => {
@@ -16,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
             Object.keys(urlMap).forEach(key => delete urlMap[key]);
             Object.keys(historyMap).forEach(key => delete historyMap[key]);
 
-            if (query) {
+            if (query.length >= 2) { // Only search if query has 2 or more characters
                 searchTabs(query);
                 searchBookmarks(query);
                 searchHistory(query);
@@ -58,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function searchHistory(query) {
         chrome.history.search({ text: query, maxResults: 100 }, function (historyItems) {
-            const results = historyItems
+            historyItems
                 .filter(item => item.title.toLowerCase().includes(query) || item.url.toLowerCase().includes(query))
                 .forEach(item => {
                     const score = calculateScore(item.visitCount, item.lastVisitTime);
@@ -100,26 +103,44 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const domainCell = document.createElement('td');
         domainCell.className = 'domain';
-        domainCell.textContent = (new URL(url)).hostname;
+        domainCell.innerHTML = highlightQuery((new URL(url)).hostname, query);
 
         const titleCell = document.createElement('td');
         titleCell.className = 'title';
-        titleCell.innerHTML = highlightQuery(title, query);
+        //titleCell.innerHTML = highlightQuery(title, query);
         titleCell.title = url; // Show full URL on mouseover
 
         const link = document.createElement('a');
-        link.href = url;
-        link.target = '_blank';
-        link.appendChild(titleCell);
+        link.href = '#'; // Prevent default behavior
+        link.innerHTML = highlightQuery(title, query);
+        link.onclick = (e) => {
+            e.preventDefault();
+            if (sources.has('tab')) {
+                switchToTab(url);
+            } else {
+                chrome.tabs.create({ url: url });
+            }
+        };
+        titleCell.appendChild(link);
 
         const iconsCell = document.createElement('td');
         iconsCell.className = 'icons';
         updateIconsContent(iconsCell, sources);
 
         resultRow.appendChild(domainCell);
-        resultRow.appendChild(link);
+        resultRow.appendChild(titleCell);
         resultRow.appendChild(iconsCell);
         resultsTable.appendChild(resultRow);
+    }
+
+    function switchToTab(url) {
+        chrome.tabs.query({}, function (tabs) {
+            const tab = tabs.find(tab => tab.url === url);
+            if (tab) {
+                chrome.tabs.update(tab.id, { active: true });
+                chrome.windows.update(tab.windowId, { focused: true });
+            }
+        });
     }
 
     function highlightQuery(text, query) {
@@ -159,8 +180,20 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function compareResults(a, b) {
-        const domainA = (new URL(a.url)).hostname.toLowerCase();
-        const domainB = (new URL(b.url)).hostname.toLowerCase();
+        let domainA = '';
+        let domainB = '';
+
+        try {
+            domainA = (new URL(a.url)).hostname.toLowerCase();
+        } catch (e) {
+            console.log(`Invalid URL for a: ${a.url}`, e);
+        }
+
+        try {
+            domainB = (new URL(b.url)).hostname.toLowerCase();
+        } catch (e) {
+            console.log(`Invalid URL for b: ${b.url}`, e);
+        }
 
         if (domainA < domainB) return -1;
         if (domainA > domainB) return 1;

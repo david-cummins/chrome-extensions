@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
-            width: 800px; /* Make the popup 800px wide */
+            width: 760px; /* Make the popup 800px wide */
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 10px;
@@ -18,7 +18,7 @@
 
         .results {
             max-height: 600px;
-            overflow-y: auto;
+            /*overflow-y: auto;*/
             margin-top: 10px;
         }
 
@@ -43,12 +43,17 @@
         }
 
         .title {
-            width: calc(100% - 225px); /* Adjusted for other column widths */
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+            width: 500px; /* Adjusted for other column widths */
             cursor: pointer;
         }
+
+            .title a {
+                width: 500px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                display: inline-block;
+            }
 
         .icons {
             width: 75px; /* Fixed width for icons column */
